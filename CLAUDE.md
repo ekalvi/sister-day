@@ -1,4 +1,6 @@
 # Notes for Claude working in this repo
+<!-- preview-branch test: trivial edit to trigger Cloudflare build -->
+
 
 ## Project shape
 
