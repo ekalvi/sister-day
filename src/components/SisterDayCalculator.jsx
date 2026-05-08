@@ -56,7 +56,7 @@ export default function SisterDayCalculator({ commitSha = "dev" }) {
     const wSolDoy = winterSolsticeDoy(location.h);
     const sSolDoy = summerSolsticeDoy(location.h);
     const wSolDate = new Date(yr, 0, wSolDoy, 12);
-    const lag = thermalLag(wSolDoy, dayOfYear(C));
+    const lag = thermalLag(wSolDoy, dayOfYear(C), yr);
 
     return { D, C, H, warmDate, coolDate, n, wSolDoy, sSolDoy, wSolDate, lag, yr };
   }, [dateValue, location]);

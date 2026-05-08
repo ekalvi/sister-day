@@ -41,6 +41,12 @@ describe("thermalLag", () => {
   it("returns 0 when they coincide", () => {
     expect(thermalLag(355, 355)).toBe(0);
   });
+
+  it("uses the year length when the DOYs come from a leap year", () => {
+    // In a 366-day year, Dec 31 has DOY 366. Short-arc from summer solstice
+    // (DOY 172) to DOY 366 is 172 days; the 365-wrap would return 171.
+    expect(thermalLag(172, 366, 2024)).toBe(172);
+  });
 });
 
 describe("sisterDay", () => {
@@ -86,5 +92,18 @@ describe("sisterDay", () => {
     expect(coolDate.getDate()).toBe(21);
     expect(warmDate.getMonth() + 1).toBe(3);
     expect(warmDate.getDate()).toBe(1);
+  });
+
+  it("wraps using the leap-year length when the sister falls before Jan 1", () => {
+    // Coldest = Jan 29 2024. Input = Mar 1 2024 (DOY 61 in a leap year).
+    // 32 days after coldest, so the sister is 32 days before → Dec 28.
+    // The 365-day wrap returns Dec 27 in a 366-day year.
+    const cold = at(2024, 1, 29);
+    const { n, warmDate, coolDate } = sisterDay(at(2024, 3, 1), cold);
+    expect(n).toBe(32);
+    expect(warmDate.getMonth() + 1).toBe(3);
+    expect(warmDate.getDate()).toBe(1);
+    expect(coolDate.getMonth() + 1).toBe(12);
+    expect(coolDate.getDate()).toBe(28);
   });
 });
