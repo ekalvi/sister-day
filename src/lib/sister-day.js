@@ -9,6 +9,10 @@ export function dayOfYear(d) {
   return Math.floor((dMs - startMs) / 86400000) + 1;
 }
 
+const isLeap = (y) => (y % 4 === 0 && y % 100 !== 0) || y % 400 === 0;
+const yearLen = (y) => (isLeap(y) ? 366 : 365);
+const halfYear = (y) => Math.floor(yearLen(y) / 2);
+
 export function winterSolsticeDoy(hemisphere) {
   return hemisphere === "N" ? 355 : 172;
 }
@@ -18,10 +22,14 @@ export function summerSolsticeDoy(hemisphere) {
 }
 
 // Days between solstice and coldest day on the short side of the year.
-export function thermalLag(solDoy, coldDoy) {
+// `year` makes the wrap leap-aware when the DOYs come from a known year;
+// omit it for non-leap math.
+export function thermalLag(solDoy, coldDoy, year) {
+  const len = year === undefined ? 365 : yearLen(year);
+  const half = year === undefined ? 182 : halfYear(year);
   let d = coldDoy - solDoy;
-  if (d < 0) d += 365;
-  if (d > 182) d -= 365;
+  if (d < 0) d += len;
+  if (d > half) d -= len;
   return Math.abs(d);
 }
 
@@ -33,14 +41,16 @@ export function sisterDay(date, coldDate) {
   const yr = date.getFullYear();
   const cDoy = dayOfYear(coldDate);
   const dDoy = dayOfYear(date);
+  const len = yearLen(yr);
+  const half = halfYear(yr);
 
   let n = dDoy - cDoy;
-  if (n > 182) n -= 365;
-  if (n < -182) n += 365;
+  if (n > half) n -= len;
+  if (n < -half) n += len;
 
   let sDoy = cDoy - n;
-  if (sDoy < 1) sDoy += 365;
-  if (sDoy > 365) sDoy -= 365;
+  if (sDoy < 1) sDoy += len;
+  if (sDoy > len) sDoy -= len;
 
   const sister = new Date(yr, 0, sDoy, 12);
   const absN = Math.abs(n);
