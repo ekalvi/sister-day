@@ -35,6 +35,8 @@ const POINT_COLORS = {
   solstice: "#7c3aed", // violet-600
 };
 
+const REPO_URL = "https://github.com/ekalvi/sister-day";
+
 export default function SisterDayCalculator({ commitSha = "dev" }) {
   const [dateValue, setDateValue] = useState(todayIso());
   const [locationIndex, setLocationIndex] = useState(0);
@@ -59,13 +61,6 @@ export default function SisterDayCalculator({ commitSha = "dev" }) {
     return { D, C, H, warmDate, coolDate, n, wSolDoy, sSolDoy, wSolDate, lag, yr };
   }, [dateValue, location]);
 
-  const shortShaHref = commitSha && commitSha !== "dev" && commitSha !== "unknown"
-    ? `https://github.com/ekalvi/sister-day/commit/${commitSha}`
-    : "https://github.com/ekalvi/sister-day";
-  const shortSha = commitSha && commitSha !== "dev" && commitSha !== "unknown"
-    ? commitSha.slice(0, 7)
-    : commitSha;
-
   return (
     <div
       className="min-h-screen bg-zinc-50 text-zinc-900 antialiased"
@@ -81,11 +76,16 @@ export default function SisterDayCalculator({ commitSha = "dev" }) {
 
       <div className="mx-auto max-w-3xl px-4 py-10 sm:px-6 sm:py-16">
         <header className="mb-8">
-          <span className="mb-4 inline-flex items-center gap-1.5 rounded-full border border-zinc-200 bg-white px-2.5 py-1 text-[11px] font-medium uppercase tracking-wider text-zinc-600">
-            <img src="/favicon.svg" alt="" aria-hidden="true" className="h-3.5 w-3.5" />
-            Sister Day
-          </span>
-          <h1 className="text-4xl font-semibold tracking-tight text-zinc-900 sm:text-5xl">
+          <div className="mb-3 flex items-center justify-between">
+            <a
+              href="/"
+              className="inline-flex items-center gap-1.5 rounded-full border border-zinc-200 bg-white px-2.5 py-1 text-[11px] font-medium uppercase tracking-wider text-zinc-600 transition hover:border-zinc-300 hover:text-zinc-900"
+            >
+              <img src="/favicon.svg" alt="" aria-hidden="true" className="h-4 w-4" />
+              Sister Day
+            </a>
+          </div>
+          <h1 className="text-4xl font-bold tracking-tight text-zinc-950 sm:text-5xl">
             The mirror date across winter&rsquo;s coldest point
           </h1>
           <p className="mt-4 text-base leading-relaxed text-zinc-600">
@@ -130,14 +130,85 @@ export default function SisterDayCalculator({ commitSha = "dev" }) {
 
         <DefinitionCard />
 
-        <footer className="mt-10 border-t border-zinc-200 pt-6 text-center text-xs text-zinc-500">
-          <span>A concept by Erik Kalviainen · Built with Claude · </span>
-          <a href="https://github.com/ekalvi/sister-day" className="underline-offset-2 hover:text-zinc-900 hover:underline">GitHub</a>
-          <span> · </span>
-          <a href={shortShaHref} className="mono underline-offset-2 hover:text-zinc-900 hover:underline">v{shortSha}</a>
-        </footer>
+        <Footer commitSha={commitSha} />
       </div>
     </div>
+  );
+}
+
+function Footer({ commitSha }) {
+  const isRealSha = commitSha && commitSha !== "dev" && commitSha !== "unknown";
+  const shaHref = isRealSha ? `${REPO_URL}/commit/${commitSha}` : REPO_URL;
+  return (
+    <footer className="mt-10 border-t border-zinc-200 pt-5">
+      <div className="flex items-center justify-between text-[11px] font-medium uppercase tracking-wider text-zinc-500">
+        <span>
+          Made in Canada 🇨🇦 by{" "}
+          <a
+            href="https://github.com/ekalvi"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="transition hover:text-zinc-900"
+          >
+            ekalvi
+          </a>
+        </span>
+        <span className="flex items-center gap-3">
+          <span className="flex items-center gap-1.5">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="14"
+              height="14"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              aria-hidden="true"
+            >
+              <circle cx="12" cy="12" r="1" />
+              <path d="M20.2 20.2c2.04-2.03.02-7.36-4.5-11.9-4.54-4.52-9.87-6.54-11.9-4.5-2.04 2.03-.02 7.36 4.5 11.9 4.54 4.52 9.87 6.54 11.9 4.5Z" />
+              <path d="M15.7 15.7c4.52-4.54 6.54-9.87 4.5-11.9-2.03-2.04-7.36-.02-11.9 4.5-4.52 4.54-6.54 9.87-4.5 11.9 2.03 2.04 7.36.02 11.9-4.5Z" />
+            </svg>
+            <span>q5m</span>
+          </span>
+          <a
+            href={REPO_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Source on GitHub"
+            className="inline-flex items-center text-zinc-500 transition hover:text-zinc-900"
+          >
+            <GithubIcon />
+          </a>
+          <a
+            href={shaHref}
+            target="_blank"
+            rel="noopener noreferrer"
+            title={commitSha}
+            className="font-mono normal-case tracking-normal text-zinc-500 transition hover:text-zinc-900"
+          >
+            {commitSha?.slice(0, 7) ?? "dev"}
+          </a>
+        </span>
+      </div>
+    </footer>
+  );
+}
+
+function GithubIcon() {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="14"
+      height="14"
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      aria-hidden="true"
+    >
+      <path d="M12 .5C5.73.5.67 5.56.67 11.83c0 5.02 3.24 9.27 7.74 10.78.57.1.78-.25.78-.55 0-.27-.01-1.17-.02-2.13-3.15.69-3.81-1.34-3.81-1.34-.51-1.31-1.25-1.66-1.25-1.66-1.02-.7.08-.69.08-.69 1.13.08 1.72 1.16 1.72 1.16 1 1.72 2.63 1.22 3.27.93.1-.73.39-1.22.71-1.5-2.51-.29-5.16-1.26-5.16-5.6 0-1.24.44-2.25 1.16-3.04-.12-.29-.5-1.45.11-3.02 0 0 .95-.3 3.11 1.16.9-.25 1.87-.38 2.83-.38.96 0 1.93.13 2.83.38 2.16-1.46 3.11-1.16 3.11-1.16.61 1.57.23 2.73.11 3.02.72.79 1.16 1.8 1.16 3.04 0 4.35-2.66 5.31-5.19 5.59.4.34.76 1.02.76 2.06 0 1.49-.01 2.69-.01 3.06 0 .3.21.66.79.55 4.49-1.5 7.73-5.76 7.73-10.78C23.33 5.56 18.27.5 12 .5z" />
+    </svg>
   );
 }
 
