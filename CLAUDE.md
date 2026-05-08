@@ -39,7 +39,7 @@ Fixed dev port is derived from the directory name (`vite.config.js`) so each q5m
 
 ## Deploy
 
-**Production URL:** https://sister-day.q5m.ai
+**Production URL:** https://sisterday.q5m.ai
 
 **Hosting:** Cloudflare Workers (static assets) — project `sister-day` in the `q5m` Cloudflare account. Auto-deploys on push to `origin/main` via the Cloudflare GitHub integration. No manual deploy step.
 
