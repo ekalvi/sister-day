@@ -37,7 +37,7 @@ npm run deploy   # vite build + wrangler deploy
 - Vitest 3 for unit tests
 - Geist Sans / Geist Mono (loaded from Google Fonts at runtime)
 - shadcn-style aesthetic: zinc neutrals, emerald = warming, rose = cooling, sky = cold, amber = hot, violet = solstice
-- Cloudflare Workers static assets, custom domain `sister-day.q5m.io`
+- Cloudflare Workers static assets, custom domain `sister-day.q5m.ai`
 
 ## License
 
